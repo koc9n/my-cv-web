@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   title: "Kostiantyn Mironchyk | Senior Full Stack Developer",
   description:
-    "Senior Java and Full Stack Developer with 10+ years of experience in enterprise systems, cloud migrations, and scalable web platforms.",
+    "Senior Java and Full Stack Developer with 15+ years of experience in enterprise systems, cloud migrations, and scalable web platforms.",
   keywords: [
     "Senior Java Developer",
     "Senior Full Stack Developer",

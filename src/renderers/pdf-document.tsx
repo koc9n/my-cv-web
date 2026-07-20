@@ -1,5 +1,6 @@
 import {
   Document,
+  Font,
   Link,
   Page,
   StyleSheet,
@@ -8,34 +9,59 @@ import {
 } from "@react-pdf/renderer";
 import { visibleSections, type Cv, type SectionId } from "@/domain/cv";
 
+Font.registerHyphenationCallback((word) => [word]);
+
 const s = StyleSheet.create({
   page: {
-    padding: 28,
+    paddingTop: 32,
+    paddingRight: 36,
+    paddingBottom: 32,
+    paddingLeft: 36,
     fontFamily: "Helvetica",
-    fontSize: 8.2,
+    fontSize: 9.1,
     color: "#17231f",
-    lineHeight: 1.3,
+    lineHeight: 1.32,
   },
-  header: { paddingBottom: 8, borderBottom: "1 solid #d8d7cf" },
-  name: { fontSize: 24, fontFamily: "Helvetica-Bold", lineHeight: 1.15 },
-  headline: { fontSize: 12, marginTop: 4 },
-  muted: { color: "#5d6964" },
-  section: { marginTop: 8 },
-  title: {
+  header: { paddingBottom: 9, borderBottom: "0.75 solid #d8d7cf" },
+  name: { fontSize: 23, fontFamily: "Helvetica-Bold", lineHeight: 1.08 },
+  headline: {
     fontSize: 11.5,
     fontFamily: "Helvetica-Bold",
-    marginBottom: 3,
+    marginTop: 3,
+    marginBottom: 1,
+  },
+  muted: { color: "#5d6964" },
+  section: { marginTop: 9 },
+  title: {
+    fontSize: 10.5,
+    fontFamily: "Helvetica-Bold",
+    letterSpacing: 0.65,
+    marginBottom: 4,
     color: "#bb4d2e",
   },
-  row: { flexDirection: "row", justifyContent: "space-between", gap: 8 },
-  job: { marginBottom: 5 },
-  role: { fontFamily: "Helvetica-Bold", fontSize: 9.5 },
-  employer: { fontFamily: "Helvetica-Bold", color: "#bb4d2e" },
-  dates: { textAlign: "right", color: "#5d6964" },
-  bullet: { marginLeft: 7, marginTop: 1 },
-  stack: { fontSize: 7.3, color: "#5d6964", marginTop: 2 },
-  skill: { marginBottom: 1 },
-  link: { color: "#17231f", textDecoration: "underline", marginTop: 2 },
+  row: { flexDirection: "row", justifyContent: "space-between", gap: 12 },
+  job: { marginBottom: 7 },
+  role: { fontFamily: "Helvetica-Bold", fontSize: 9.7, lineHeight: 1.2 },
+  employer: {
+    fontFamily: "Helvetica-Bold",
+    color: "#bb4d2e",
+    marginTop: 1,
+  },
+  dates: {
+    minWidth: 112,
+    fontSize: 8,
+    textAlign: "right",
+    color: "#5d6964",
+  },
+  bullet: { marginLeft: 9, marginTop: 1.5 },
+  stack: { fontSize: 7.5, color: "#5d6964", marginTop: 2.5 },
+  skill: { marginBottom: 1.5 },
+  link: {
+    fontSize: 8,
+    color: "#17231f",
+    textDecoration: "underline",
+    marginTop: 2,
+  },
 });
 const bold = { fontFamily: "Helvetica-Bold" };
 const Title = ({ children }: { children: string }) => (
@@ -155,10 +181,13 @@ function PdfSection({
     return (
       <View style={s.section}>
         <Title>{label}</Title>
-        {cv.languages.map((l) => (
-          <Text key={l.language}>
-            <Text style={bold}>{l.language}: </Text>
-            {l.proficiency}
+        {cv.languages.map((l, index) => (
+          <Text key={`${l.language}-${l.proficiency}-${index}`}>
+            <Text style={bold}>
+              {l.language}
+              {l.proficiency && ": "}
+            </Text>
+            {l.proficiency || ""}
           </Text>
         ))}
       </View>

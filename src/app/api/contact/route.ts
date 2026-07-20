@@ -1,12 +1,6 @@
-import { z } from "zod";
+import { contactSchema } from "@/server/contact-schema";
 import { allowRequest, clientAddress } from "@/server/rate-limit";
 
-export const contactSchema = z.object({
-  name: z.string().trim().min(2).max(80),
-  email: z.string().email().max(160),
-  message: z.string().trim().min(10).max(3000),
-  companyWebsite: z.string().max(0),
-});
 export async function POST(request: Request) {
   const rate = allowRequest(
     `message:${clientAddress(request)}`,

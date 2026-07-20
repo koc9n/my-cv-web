@@ -694,6 +694,7 @@ export function AdminEditor({
                 <div className="field-row" key={i}>
                   <input
                     aria-label="Language"
+                    placeholder="Language (for example, English)"
                     value={l.language}
                     onChange={(e) =>
                       setCv((c) => ({
@@ -706,6 +707,7 @@ export function AdminEditor({
                   />
                   <input
                     aria-label="Proficiency"
+                    placeholder="Proficiency (optional)"
                     value={l.proficiency}
                     onChange={(e) =>
                       setCv((c) => ({
@@ -741,7 +743,7 @@ export function AdminEditor({
                     ...c,
                     languages: [
                       ...c.languages,
-                      { language: "Language", proficiency: "" },
+                      { language: "", proficiency: "" },
                     ],
                   }))
                 }

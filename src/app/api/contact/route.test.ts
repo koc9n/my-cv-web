@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { contactSchema, POST } from "@/app/api/contact/route";
+import { POST } from "@/app/api/contact/route";
+import { contactSchema } from "@/server/contact-schema";
 describe("contact endpoint", () => {
   it("rejects bot honeypot content", () =>
     expect(
