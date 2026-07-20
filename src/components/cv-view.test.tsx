@@ -25,12 +25,6 @@ describe("public CV accessibility", () => {
     expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(
       [...container.querySelectorAll("h2")].map((x) => x.textContent),
-    ).toEqual([
-      "Summary",
-      "Technical skills",
-      "Experience",
-      "Key achievements",
-      "Education",
-    ]);
+    ).toEqual(["Summary", "Experience", "Technical skills", "Education"]);
   });
 });

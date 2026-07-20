@@ -2,15 +2,22 @@ import {
   Document,
   ExternalHyperlink,
   HeadingLevel,
+  LevelFormat,
   Packer,
+  PageOrientation,
   Paragraph,
   TextRun,
 } from "docx";
 import { visibleSections, type Cv, type SectionId } from "@/domain/cv";
 
 const heading = (text: string) =>
-  new Paragraph({ text, heading: HeadingLevel.HEADING_1 });
-const bullet = (text: string) => new Paragraph({ text, bullet: { level: 0 } });
+  new Paragraph({ text: text.toUpperCase(), heading: HeadingLevel.HEADING_1 });
+const bullet = (text: string) =>
+  new Paragraph({
+    text,
+    numbering: { reference: "cv-bullets", level: 0 },
+    spacing: { after: 35, line: 245 },
+  });
 function sectionParagraphs(cv: Cv, id: SectionId, label: string): Paragraph[] {
   const out = [heading(label)];
   if (id === "summary") return [...out, new Paragraph(cv.summary)];
@@ -31,22 +38,39 @@ function sectionParagraphs(cv: Cv, id: SectionId, label: string): Paragraph[] {
     for (const j of cv.experience)
       out.push(
         new Paragraph({
-          children: [new TextRun({ text: j.role, bold: true, size: 24 })],
+          children: [new TextRun({ text: j.role, bold: true, size: 21 })],
+          keepNext: true,
+          spacing: { before: 80, after: 10 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: j.employer, bold: true }),
-            new TextRun(` | ${j.location} | ${j.start} - ${j.end}`),
+            new TextRun({ text: j.employer, bold: true, color: "BB4D2E" }),
+            new TextRun({
+              text: ` | ${j.location} | ${j.start} - ${j.end}`,
+              color: "5D6964",
+            }),
           ],
+          keepNext: true,
+          spacing: { after: 30 },
         }),
         ...j.achievements.map((a) => bullet(a.text)),
         ...(j.technologies.length
           ? [
               new Paragraph({
                 children: [
-                  new TextRun({ text: "Stack: ", bold: true }),
-                  new TextRun(j.technologies.join(", ")),
+                  new TextRun({
+                    text: "Stack: ",
+                    bold: true,
+                    size: 17,
+                    color: "5D6964",
+                  }),
+                  new TextRun({
+                    text: j.technologies.join(", "),
+                    size: 17,
+                    color: "5D6964",
+                  }),
                 ],
+                spacing: { before: 15, after: 45 },
               }),
             ]
           : []),
@@ -120,7 +144,10 @@ function sectionParagraphs(cv: Cv, id: SectionId, label: string): Paragraph[] {
         (l) =>
           new Paragraph({
             children: [
-              new TextRun({ text: `${l.language}: `, bold: true }),
+              new TextRun({
+                text: `${l.language}${l.proficiency ? ": " : ""}`,
+                bold: true,
+              }),
               new TextRun(l.proficiency),
             ],
           }),
@@ -136,14 +163,25 @@ function sectionParagraphs(cv: Cv, id: SectionId, label: string): Paragraph[] {
 
 export async function renderDocx(cv: Cv): Promise<Buffer> {
   const children: Paragraph[] = [
-    new Paragraph({ text: cv.basics.name, heading: HeadingLevel.TITLE }),
     new Paragraph({
-      children: [
-        new TextRun({ text: cv.basics.headline, bold: true, size: 28 }),
-      ],
+      text: cv.basics.name,
+      heading: HeadingLevel.TITLE,
+      spacing: { after: 30 },
     }),
     new Paragraph({
-      text: `${cv.basics.location} | ${cv.basics.availability}`,
+      children: [
+        new TextRun({ text: cv.basics.headline, bold: true, size: 25 }),
+      ],
+      spacing: { after: 20 },
+    }),
+    new Paragraph({
+      children: [
+        new TextRun({
+          text: `${cv.basics.location} | ${cv.basics.availability}`,
+          color: "5D6964",
+        }),
+      ],
+      spacing: { after: 25 },
     }),
     ...cv.basics.links
       .filter((l) => l.url)
@@ -161,6 +199,7 @@ export async function renderDocx(cv: Cv): Promise<Buffer> {
                 ],
               }),
             ],
+            spacing: { after: 20 },
           }),
       ),
   ];
@@ -168,11 +207,31 @@ export async function renderDocx(cv: Cv): Promise<Buffer> {
     children.push(...sectionParagraphs(cv, section.id, section.label));
   return Packer.toBuffer(
     new Document({
+      numbering: {
+        config: [
+          {
+            reference: "cv-bullets",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.BULLET,
+                text: "•",
+                alignment: "left",
+                style: {
+                  paragraph: {
+                    indent: { left: 320, hanging: 180 },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
       styles: {
         default: {
           document: {
-            run: { font: "Arial", size: 20 },
-            paragraph: { spacing: { after: 80 } },
+            run: { font: "Arial", size: 19, color: "17231F" },
+            paragraph: { spacing: { after: 55, line: 250 } },
           },
         },
         paragraphStyles: [
@@ -182,8 +241,8 @@ export async function renderDocx(cv: Cv): Promise<Buffer> {
             basedOn: "Normal",
             next: "Normal",
             quickFormat: true,
-            run: { font: "Arial", size: 40, bold: true, color: "17231F" },
-            paragraph: { spacing: { after: 120 } },
+            run: { font: "Arial", size: 38, bold: true, color: "17231F" },
+            paragraph: { spacing: { after: 30 }, keepNext: true },
           },
           {
             id: "Heading1",
@@ -191,12 +250,36 @@ export async function renderDocx(cv: Cv): Promise<Buffer> {
             basedOn: "Normal",
             next: "Normal",
             quickFormat: true,
-            run: { font: "Arial", size: 25, bold: true, color: "BB4D2E" },
-            paragraph: { spacing: { before: 220, after: 100 }, keepNext: true },
+            run: { font: "Arial", size: 21, bold: true, color: "BB4D2E" },
+            paragraph: {
+              spacing: { before: 130, after: 55 },
+              keepNext: true,
+            },
           },
         ],
       },
-      sections: [{ properties: {}, children }],
+      sections: [
+        {
+          properties: {
+            page: {
+              size: {
+                width: 11906,
+                height: 16838,
+                orientation: PageOrientation.PORTRAIT,
+              },
+              margin: {
+                top: 720,
+                right: 850,
+                bottom: 720,
+                left: 850,
+                header: 360,
+                footer: 360,
+              },
+            },
+          },
+          children,
+        },
+      ],
     }),
   );
 }

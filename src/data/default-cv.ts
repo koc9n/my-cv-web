@@ -10,7 +10,7 @@ export const defaultCv = validateCv({
     links: [{ label: "LinkedIn", url: "https://www.linkedin.com/in/koc9n" }],
   },
   summary:
-    "Results-driven Senior Full Stack Developer with 10+ years of experience building scalable, high-performance web applications and enterprise backend systems. Experienced in Java, Node.js, Angular, AWS, Docker, and Kubernetes, with a track record in microservices, infrastructure migrations, performance optimization, and team mentorship.",
+    "Senior software engineer with 15+ years of experience designing and operating Java-based enterprise systems and full-stack applications. Specialized in Spring Boot microservices, cloud infrastructure, and distributed systems, with hands-on experience across Angular, Node.js, AWS, Kubernetes, Kafka, and Terraform. Led cloud migration and platform modernization work at Allianz Technology while mentoring engineers and improving deployment and operational performance.",
   skills: [
     { category: "Languages", items: ["Java", "JavaScript", "TypeScript", "Node.js", "HTML", "CSS"] },
     { category: "Backend", items: ["Spring Boot", "Hibernate", "Express.js", "JSF", "REST APIs", "Microservices"] },
@@ -36,7 +36,7 @@ export const defaultCv = validateCv({
       technologies: ["Java", "Spring Boot", "Node.js", "Angular", "AWS", "Docker", "Kubernetes", "Terraform", "Kafka", "RabbitMQ"],
     },
     {
-      role: "Java Developer",
+      role: "Earlier Java Developer Roles",
       employer: "Mobile Technologies",
       location: "Bangkok, Thailand",
       start: "Dec 2016",
@@ -77,17 +77,14 @@ export const defaultCv = validateCv({
   projects: [],
   certifications: [],
   languages: [],
-  achievements: [
-    { text: "Led an AWS cloud migration at Allianz Technology, re-architecting legacy systems into cloud-native services." },
-    { text: "Improved system scalability through modular microservices and infrastructure-as-code practices." },
-  ],
+  achievements: [],
   additionalSections: [],
   sectionSettings: [
     { id:"summary", label:"Summary", visible:true },
-    { id:"skills", label:"Technical skills", visible:true },
     { id:"experience", label:"Experience", visible:true },
+    { id:"skills", label:"Technical skills", visible:true },
     { id:"projects", label:"Selected projects", visible:true },
-    { id:"achievements", label:"Key achievements", visible:true },
+    { id:"achievements", label:"Key achievements", visible:false },
     { id:"education", label:"Education", visible:true },
     { id:"certifications", label:"Certifications", visible:true },
     { id:"languages", label:"Languages", visible:true },

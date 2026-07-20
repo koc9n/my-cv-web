@@ -30,7 +30,7 @@ Before application scaffolding locks the ORM schema, choose between:
 
 - Google OAuth callback URLs must cover local, preview, and production environments.
 - Preview deployments must not expose production drafts or accept production contact traffic by default.
-- Domain selection is deferred until the source CV supplies the owner's name.
+- The selected production hostname is `koc9n.dev`; keep the current Vercel alias until the domain is purchased and attached.
 - Production secrets live only in the hosting platform's encrypted environment configuration.
 
 ## Research references

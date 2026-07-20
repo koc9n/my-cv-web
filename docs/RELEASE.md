@@ -11,13 +11,13 @@
 
 Never send production secrets through chat or commit them. Enter them directly in Vercel project settings and a local ignored `.env.local` file.
 
-## Suggested domain
+## Selected domain
 
-At the 2026-07-20 RDAP check, `kostiantynmironchyk.com` and `kostiantynmironchyk.dev` returned no registration record. This is not a reservation or purchase guarantee. Prefer the `.com` for broad recruiter recognition; redirect the `.dev` variant if both are purchased.
+The selected production hostname is `koc9n.dev`. Availability and pricing were checked on 2026-07-21, but availability is not reserved until checkout completes. After purchase, attach it to the Vercel Production environment and follow the domain-cutover steps in `PROJECT-RUNBOOK.md`.
 
 ## Production sequence
 
-1. Create the public GitHub repository and push `main`.
+1. Create the public GitHub repository and push `main` and `test`.
 2. Import the repository into Vercel.
 3. Attach managed PostgreSQL and set `DATABASE_URL` for production only.
 4. Set all values from `.env.example`. Keep `ENABLE_PREVIEW_ADMIN=false`.
@@ -29,6 +29,13 @@ At the 2026-07-20 RDAP check, `kostiantynmironchyk.com` and `kostiantynmironchyk
 10. Submit the contact form and test direct email/Telegram reveal actions.
 11. Attach the domain, set `NEXT_PUBLIC_SITE_URL` and `NEXTAUTH_URL` to its HTTPS URL, then redeploy.
 12. Validate canonical metadata, sitemap, robots, social card, security headers, PDF, and DOCX on the final host.
+
+## Branch promotion
+
+- Merge feature branches into `test`; its Vercel Preview deployment is the shared test environment.
+- Verify the `test` deployment before opening a release pull request from `test` to `main`.
+- Merge `test` to `main` only with green CI. Vercel deploys `main` to Production.
+- Keep temporary feature-branch previews separate from the shared `test` environment.
 
 ## Preview isolation
 

@@ -30,6 +30,14 @@ Web, PDF, and DOCX share facts, section ordering, and visual language. Pixel-ide
 
 Initialize a public GitHub repository, but ignore source CV files, database files, contact data, exports, and secrets.
 
+### 2026-07-20 — Test-to-production branch promotion
+
+Use `test` as the persistent integration branch and Vercel Preview environment. Use `main` as the protected release branch and the only Vercel Production Branch. Feature branches merge into `test`; production releases are reviewed pull requests from `test` to `main` after preview verification.
+
+### 2026-07-21 — Production hostname
+
+Use `koc9n.dev` as the canonical production hostname after registration and Vercel attachment. Keep environment-driven site and authentication URLs so the current Vercel alias can remain active until domain cutover.
+
 ## Proposed, awaiting implementation validation
 
 ### Persistence and hosting

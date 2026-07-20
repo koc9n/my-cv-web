@@ -123,9 +123,13 @@ function Section({ id, label, cv }: { id: SectionId; label: string; cv: Cv }) {
       <section aria-labelledby={id}>
         {heading}
         <ul className="plain-list">
-          {cv.languages.map((l) => (
-            <li key={l.language}>
-              <strong>{l.language}:</strong> {l.proficiency}
+          {cv.languages.map((l, index) => (
+            <li key={`${l.language}-${l.proficiency}-${index}`}>
+              <strong>
+                {l.language}
+                {l.proficiency && ":"}
+              </strong>{" "}
+              {l.proficiency}
             </li>
           ))}
         </ul>
@@ -165,29 +169,31 @@ export function CvView({ cv, preview = false }: { cv: Cv; preview?: boolean }) {
       id={preview ? undefined : "cv"}
     >
       <header className="hero">
-        <p className="eyebrow">Senior software engineering</p>
-        <h1>{cv.basics.name}</h1>
-        <p className="headline">{cv.basics.headline}</p>
-        <p className="meta">
-          {cv.basics.location} <span aria-hidden="true">/</span>{" "}
-          {cv.basics.availability}
-        </p>
+        <div className="hero-identity">
+          <p className="eyebrow">Senior software engineering</p>
+          <h1>{cv.basics.name}</h1>
+          <p className="headline">{cv.basics.headline}</p>
+          <p className="meta">
+            {cv.basics.location} <span aria-hidden="true">/</span>{" "}
+            {cv.basics.availability}
+          </p>
+        </div>
         {!preview && (
           <nav className="actions" aria-label="CV actions">
             <a className="button primary" href="#contact">
               Contact
             </a>
             <a className="button" href="/api/export/pdf">
-              PDF
+              Download PDF
             </a>
             <a className="button" href="/api/export/docx">
-              DOCX
+              Download DOCX
             </a>
             {cv.basics.links
               .filter((link) => link.url)
               .map((link) => (
                 <a
-                  className="text-link"
+                  className="button link-button"
                   key={link.url}
                   href={link.url}
                   rel="noreferrer"
