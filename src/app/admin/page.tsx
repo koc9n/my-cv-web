@@ -15,7 +15,7 @@ export default async function Admin() {
           <p className="eyebrow">Private workspace</p>
           <h1 className="admin-title">Edit CV</h1>
         </div>
-        <a className="button" href="/" target="_blank">
+        <a className="button" href="/" target="_blank" rel="noreferrer">
           View website
         </a>
       </header>

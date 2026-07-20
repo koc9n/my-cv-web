@@ -6,7 +6,8 @@ export async function requireAdmin() {
   const session = await getServerSession(authOptions);
   if (
     !session?.user?.email ||
-    session.user.email.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()
+    session.user.email.toLowerCase().trim() !==
+      process.env.ADMIN_EMAIL?.toLowerCase().trim()
   )
     throw new Error("UNAUTHORIZED");
   return session;

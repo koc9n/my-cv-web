@@ -10,7 +10,13 @@ export async function POST(request: Request) {
   );
   if (!rate.allowed)
     return Response.json({ error: "Too many requests" }, { status: 429 });
-  const parsed = schema.safeParse(await request.json());
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid request body" }, { status: 400 });
+  }
+  const parsed = schema.safeParse(body);
   if (!parsed.success)
     return Response.json({ error: "Invalid contact type" }, { status: 400 });
   const value =

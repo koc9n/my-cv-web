@@ -32,6 +32,7 @@ function RowActions({
         type="button"
         disabled={index === 0}
         onClick={() => onMove(index - 1)}
+        aria-label="Move up"
       >
         ↑
       </button>
@@ -39,6 +40,7 @@ function RowActions({
         type="button"
         disabled={index === length - 1}
         onClick={() => onMove(index + 1)}
+        aria-label="Move down"
       >
         ↓
       </button>
