@@ -10,7 +10,7 @@ Never commit:
 - Local or production database files
 - Generated exports containing private information unless explicitly approved
 
-Provide `.env.example` later with placeholder names only.
+Keep `.env.example` limited to placeholder or local-development values; real credentials belong only in ignored local environment files and the hosting provider's encrypted settings.
 
 ## Admin access
 
@@ -47,4 +47,13 @@ Provide `.env.example` later with placeholder names only.
 
 ## Dependency audit note
 
-The 2026-07-20 baseline audit reported no critical advisories. It reported framework/transitive advisories involving Next.js/PostCSS, NextAuth/UUID, and Prisma's CLI dependency. Available automated fixes proposed incompatible downgrades, so they were not applied blindly. Re-run `npm audit` during each dependency update and upgrade to patched compatible releases when available. Prisma CLI is development tooling; production exposure must still be reassessed after deployment packaging.
+The 2026-07-20 dependency refresh reports zero known vulnerabilities. Next.js 16.2.10 pins an older PostCSS and NextAuth 4.24.14 pins an older UUID, so `package.json` explicitly overrides those transitive packages with tested patched versions until their upstream releases update them.
+
+Major-version compatibility was tested rather than forced:
+
+- ESLint 10 is not yet supported by the React/import/accessibility plugins bundled with the current Next.js ESLint configuration.
+- TypeScript 7 is not yet supported by the bundled TypeScript ESLint parser.
+- Prisma 7 changes client generation and database-driver architecture; migrate it separately with database integration and deployment validation rather than treating it as a routine security bump.
+- Node type definitions stay on the Node 24 line to match the declared runtime.
+
+Re-run `npm audit`, the PostgreSQL integration test, and the complete `npm run check` gate during every dependency refresh. Never apply `npm audit fix --force` when it proposes framework downgrades.

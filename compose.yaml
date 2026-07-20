@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: mycv
+      POSTGRES_PASSWORD: mycv_local
+      POSTGRES_DB: mycv
+    ports:
+      - "5432:5432"
+    volumes:
+      - mycv_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mycv"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  mycv_postgres:

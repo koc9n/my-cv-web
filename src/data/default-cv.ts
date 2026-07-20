@@ -1,7 +1,7 @@
 import { validateCv } from "@/domain/cv";
 
 export const defaultCv = validateCv({
-  schemaVersion: 1,
+  schemaVersion: 2,
   basics: {
     name: "Kostiantyn Mironchyk",
     headline: "Senior Full Stack Developer",
@@ -74,8 +74,23 @@ export const defaultCv = validateCv({
     },
   ],
   education: [{ degree: "Bachelor's Degree in Computer Science", institution: "Kharkiv National University of Radio Electronics", period: "2006 - 2011" }],
+  projects: [],
+  certifications: [],
+  languages: [],
   achievements: [
     { text: "Led an AWS cloud migration at Allianz Technology, re-architecting legacy systems into cloud-native services." },
     { text: "Improved system scalability through modular microservices and infrastructure-as-code practices." },
+  ],
+  additionalSections: [],
+  sectionSettings: [
+    { id:"summary", label:"Summary", visible:true },
+    { id:"skills", label:"Technical skills", visible:true },
+    { id:"experience", label:"Experience", visible:true },
+    { id:"projects", label:"Selected projects", visible:true },
+    { id:"achievements", label:"Key achievements", visible:true },
+    { id:"education", label:"Education", visible:true },
+    { id:"certifications", label:"Certifications", visible:true },
+    { id:"languages", label:"Languages", visible:true },
+    { id:"additional", label:"Additional", visible:true },
   ],
 });

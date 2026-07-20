@@ -13,11 +13,12 @@ An ATS-conscious CV website for Kostiantyn Mironchyk, with a polished public pro
 
 ## Local setup
 
-1. Install Node.js 24 and PostgreSQL.
+1. Install Node.js 24 and either PostgreSQL or Docker Desktop.
 2. Copy `.env.example` to `.env.local` and fill the values.
 3. Install dependencies with `npm ci`.
-4. Apply the database migration with `npx prisma migrate deploy`.
-5. Start with `npm run dev` and open `http://localhost:3000`.
+4. With Docker, start PostgreSQL using `docker compose up -d db`.
+5. Apply the database migration with `npm run db:deploy:local`.
+6. Start with `npm run dev` and open `http://localhost:3000`.
 
 Without `DATABASE_URL`, the public page and downloads use the bundled initial CV, but admin editing requires PostgreSQL.
 
@@ -39,15 +40,22 @@ Create a Telegram bot and configure `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 ```bash
 npm run dev
 npm run lint
+npm run format:check
 npm run typecheck
 npm test
 npm run build
 npm run check
+npm run db:deploy:local
+npm run db:studio:local
 ```
 
 ## Deployment
 
 The recommended target is Vercel plus managed PostgreSQL. Configure all values from `.env.example`, run `npx prisma migrate deploy` against production, set `NEXT_PUBLIC_SITE_URL`, and update the Google callback URL. See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+Use [`docs/PROJECT-RUNBOOK.md`](docs/PROJECT-RUNBOOK.md) for the current implementation status and exact local, GitHub, Vercel, domain, verification, and rollback steps.
+
+Follow the owner-action sequence in [`docs/RELEASE.md`](docs/RELEASE.md) for repository publication, credentials, OAuth, domain, verification, and rollback.
 
 ## Private source material
 
