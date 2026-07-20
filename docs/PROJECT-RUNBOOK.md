@@ -124,9 +124,24 @@ git ls-files
 
 Confirm that `.env.local`, source CV files, databases, exports, `AGENTS.md`, `.agents/`, `.codex/`, `.junie/`, and IDE files are absent.
 
+## Branch and deployment workflow
+
+- `test` is the persistent integration branch. Feature branches merge into `test` through reviewed pull requests after CI passes.
+- Every push to `test` creates a Vercel Preview deployment. Preview is the test environment and must use preview-only or non-sensitive configuration.
+- `main` is the protected production branch and the only Vercel Production Branch.
+- Production releases use a `test` to `main` pull request. Merge only after the `test` preview has passed functional, responsive, export, and contact checks.
+- Do not push feature work directly to `main` or promote an arbitrary feature-branch preview to production.
+
+Recommended flow:
+
+```text
+feature branch -> pull request -> test -> Vercel Preview verification
+test -> release pull request -> main -> Vercel Production
+```
+
 ## Recommended production deployment: Vercel and managed PostgreSQL
 
-1. Push `main` to GitHub and import `OWNER/my-cv-web` into Vercel.
+1. Push `main` and `test` to GitHub and import `OWNER/my-cv-web` into Vercel. Keep `main` configured as the Vercel Production Branch.
 2. Attach a managed PostgreSQL database (Neon through the Vercel Marketplace is the documented default).
 3. Set these Production environment variables in Vercel:
 
@@ -158,7 +173,7 @@ Confirm that `.env.local`, source CV files, databases, exports, `AGENTS.md`, `.a
 7. Add an infrastructure-level rate limit for `/api/contact` and `/api/contact/reveal`.
 8. Complete every live check in `docs/RELEASE.md`.
 
-For preview deployments, do not expose production database or contact secrets. Admin access is denied in Vercel Preview unless `ENABLE_PREVIEW_ADMIN=true`; only enable it with disposable preview data and credentials.
+For the `test` Preview environment, set `NEXT_PUBLIC_SITE_URL` and `NEXTAUTH_URL` to its stable branch URL if those features are being tested. Do not expose the production database, OAuth credentials, bot token, chat ID, email address, or other contact secrets. Admin access is denied in Vercel Preview unless `ENABLE_PREVIEW_ADMIN=true`; only enable it with disposable preview data and credentials. The public Telegram profile URL may be configured for Preview because it is intentionally public.
 
 ## Domain cutover
 
