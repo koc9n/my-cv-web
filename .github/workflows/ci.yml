@@ -6,6 +6,20 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mycv_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,10 +29,17 @@ jobs:
       - run: npm ci
       - run: npx prisma generate
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/mycv
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mycv_test
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mycv_test
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - run: npm run test:integration
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mycv_test
+          RUN_DB_TESTS: "true"
       - run: npm run build
         env:
-          DATABASE_URL: postgresql://user:password@127.0.0.1:5432/mycv
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/mycv_test

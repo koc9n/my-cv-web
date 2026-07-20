@@ -28,6 +28,12 @@ tmp/
 *.iml
 .DS_Store
 
+# Local AI/agent context
+/AGENTS.md
+/.agents/
+/.codex/
+/.junie/
+
 # Logs
 *.log
 *.tsbuildinfo

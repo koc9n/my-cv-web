@@ -10,7 +10,7 @@ Never commit:
 - Local or production database files
 - Generated exports containing private information unless explicitly approved
 
-Provide `.env.example` later with placeholder names only.
+Keep `.env.example` limited to placeholder or local-development values; real credentials belong only in ignored local environment files and the hosting provider's encrypted settings.
 
 ## Admin access
 
