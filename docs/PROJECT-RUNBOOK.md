@@ -67,7 +67,7 @@ Open `http://localhost:3000`. With no working database or OAuth configuration, u
    ```bash
    npm ci
    docker compose up -d db
-   npm run db:deploy
+   npm run db:deploy:local
    ```
 
 7. Start the application:
@@ -80,7 +80,7 @@ Open `http://localhost:3000`. With no working database or OAuth configuration, u
 
    - Public CV: `http://localhost:3000`
    - Admin editor: `http://localhost:3000/admin`
-   - Prisma database UI: run `npm run db:studio`
+   - Prisma database UI: run `npm run db:studio:local`
 
 Stop the local database with `docker compose stop db`. `docker compose down` removes containers but retains the named database volume. Do not use `docker compose down -v` unless intentionally deleting local CV data.
 

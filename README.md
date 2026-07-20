@@ -17,7 +17,7 @@ An ATS-conscious CV website for Kostiantyn Mironchyk, with a polished public pro
 2. Copy `.env.example` to `.env.local` and fill the values.
 3. Install dependencies with `npm ci`.
 4. With Docker, start PostgreSQL using `docker compose up -d db`.
-5. Apply the database migration with `npm run db:deploy`.
+5. Apply the database migration with `npm run db:deploy:local`.
 6. Start with `npm run dev` and open `http://localhost:3000`.
 
 Without `DATABASE_URL`, the public page and downloads use the bundled initial CV, but admin editing requires PostgreSQL.
@@ -45,6 +45,8 @@ npm run typecheck
 npm test
 npm run build
 npm run check
+npm run db:deploy:local
+npm run db:studio:local
 ```
 
 ## Deployment

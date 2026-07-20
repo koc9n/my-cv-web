@@ -14,10 +14,12 @@
     "test:integration": "vitest run src/server/cv-repository.integration.test.ts",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
     "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:deploy:local": "node --env-file=.env.local ./node_modules/prisma/build/index.js migrate deploy",
+    "db:studio": "prisma studio",
+    "db:studio:local": "node --env-file=.env.local ./node_modules/prisma/build/index.js studio"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.0",
+    "@prisma/client": "6.19.3",
     "@react-pdf/renderer": "^4.5.1",
     "docx": "^9.7.1",
     "next": "16.2.10",
@@ -41,7 +43,7 @@
     "mammoth": "^1.12.0",
     "pdf-parse": "^2.4.5",
     "prettier": "^3.9.5",
-    "prisma": "^6.19.0",
+    "prisma": "6.19.3",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.10"
