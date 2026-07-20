@@ -58,6 +58,8 @@ Open `http://localhost:3000`. With no working database or OAuth configuration, u
    - Authorized JavaScript origin: `http://localhost:3000`
    - Authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
 
+   Keep a separate client named `my-cv-web development`. Do not reuse its secret in production.
+
 4. Fill `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `ADMIN_EMAIL` in `.env.local`. `ADMIN_EMAIL` must exactly match the verified Google account allowed to edit the CV.
 
 5. To enable contact delivery, fill `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `PUBLIC_CONTACT_EMAIL`, and `PUBLIC_TELEGRAM_URL`.
@@ -152,6 +154,7 @@ Confirm that `.env.local`, source CV files, databases, exports, `AGENTS.md`, `.a
 
 5. Deploy the application.
 6. Add `https://FINAL_HOST/api/auth/callback/google` to the Google OAuth client.
+   Use a separate production Web application client named `my-cv-web production`, with `https://FINAL_HOST` as its authorized JavaScript origin.
 7. Add an infrastructure-level rate limit for `/api/contact` and `/api/contact/reveal`.
 8. Complete every live check in `docs/RELEASE.md`.
 
