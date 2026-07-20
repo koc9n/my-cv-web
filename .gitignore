@@ -1,0 +1,36 @@
+# Dependencies and builds
+node_modules/
+.next/
+out/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local databases
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Private CV source material (keep the instructions only)
+data/*
+!data/README.md
+
+# Generated exports
+exports/
+tmp/
+
+# IDE and operating system
+.idea/
+*.iml
+.DS_Store
+
+# Logs
+*.log
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*

@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CvState {
+  id          String   @id @default("primary")
+  draft       Json
+  published   Json
+  lockVersion Int      @default(1)
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+}
+
+model CvRevision {
+  id        String   @id @default(cuid())
+  content   Json
+  reason    String
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}

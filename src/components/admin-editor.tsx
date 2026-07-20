@@ -1,0 +1,18 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
+import type { Cv } from "@/domain/cv";
+
+type Revision={id:string;reason:string;createdAt:string};
+export function AdminEditor({initialCv,initialVersion,revisions}:{initialCv:Cv;initialVersion:number;revisions:Revision[]}){
+ const [cv,setCv]=useState(initialCv),[version,setVersion]=useState(initialVersion),[status,setStatus]=useState("Saved"),first=useRef(true);
+ useEffect(()=>{if(first.current){first.current=false;return}setStatus("Unsaved changes");const timer=setTimeout(async()=>{setStatus("Saving...");const r=await fetch("/api/admin/cv",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({cv,lockVersion:version})});const body=await r.json();if(r.ok){setVersion(body.lockVersion);setStatus("Saved")}else setStatus(body.error??"Save failed")},900);return()=>clearTimeout(timer)},[cv,version]);
+ const setBasics=(key:"name"|"headline"|"location"|"availability",value:string)=>setCv(c=>({...c,basics:{...c.basics,[key]:value}}));
+ const publish=async()=>{if(!confirm("Publish the current saved draft?"))return;await fetch("/api/admin/cv",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"publish"})});location.reload()};
+ const restore=async(id:string)=>{if(!confirm("Restore this revision into the draft?"))return;await fetch("/api/admin/cv",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"restore",id})});location.reload()};
+ return <div className="editor-layout"><div className="editor"><div className="editor-toolbar"><span role="status">{status}</span><button className="button primary" onClick={publish} disabled={status!=="Saved"}>Publish</button></div>
+  <fieldset><legend>Identity</legend>{(["name","headline","location","availability"] as const).map(k=><label key={k}>{k[0].toUpperCase()+k.slice(1)}<input value={cv.basics[k]} onChange={e=>setBasics(k,e.target.value)}/></label>)}</fieldset>
+  <fieldset><legend>Summary</legend><textarea rows={7} value={cv.summary} onChange={e=>setCv(c=>({...c,summary:e.target.value}))}/></fieldset>
+  <fieldset><legend>Skills</legend>{cv.skills.map((g,i)=><div className="field-row" key={`${g.category}-${i}`}><input aria-label="Skill category" value={g.category} onChange={e=>setCv(c=>({...c,skills:c.skills.map((x,n)=>n===i?{...x,category:e.target.value}:x)}))}/><textarea aria-label={`${g.category} skills`} rows={2} value={g.items.join(", ")} onChange={e=>setCv(c=>({...c,skills:c.skills.map((x,n)=>n===i?{...x,items:e.target.value.split(",").map(v=>v.trim()).filter(Boolean)}:x)}))}/></div>)}</fieldset>
+  <fieldset><legend>Experience</legend>{cv.experience.map((job,i)=><div className="editor-job" key={`${job.employer}-${i}`}><div className="field-row"><input aria-label="Role" value={job.role} onChange={e=>setCv(c=>({...c,experience:c.experience.map((x,n)=>n===i?{...x,role:e.target.value}:x)}))}/><input aria-label="Employer" value={job.employer} onChange={e=>setCv(c=>({...c,experience:c.experience.map((x,n)=>n===i?{...x,employer:e.target.value}:x)}))}/></div>{job.achievements.map((a,j)=><textarea key={j} aria-label={`Achievement ${j+1}`} rows={2} value={a.text} onChange={e=>setCv(c=>({...c,experience:c.experience.map((x,n)=>n===i?{...x,achievements:x.achievements.map((y,m)=>m===j?{text:e.target.value}:y)}:x)}))}/>)}</div>)}</fieldset>
+ </div><aside className="revisions"><h2>Revisions</h2>{revisions.length?revisions.map(r=><div key={r.id}><strong>{r.reason}</strong><small>{new Date(r.createdAt).toLocaleString()}</small><button className="text-link" onClick={()=>restore(r.id)}>Restore</button></div>):<p>No revisions yet.</p>}</aside></div>
+}
