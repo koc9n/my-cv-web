@@ -17,11 +17,9 @@ describe("CV exports", () => {
     const text = (await parser.getText()).text;
     await parser.destroy();
     expect(text).toContain("Kostiantyn Mironchyk");
-    expect(text.indexOf("SUMMARY")).toBeLessThan(
+    expect(text.indexOf("SUMMARY")).toBeLessThan(text.indexOf("EXPERIENCE"));
+    expect(text.indexOf("EXPERIENCE")).toBeLessThan(
       text.indexOf("TECHNICAL SKILLS"),
-    );
-    expect(text.indexOf("TECHNICAL SKILLS")).toBeLessThan(
-      text.indexOf("EXPERIENCE"),
     );
   });
   it("produces an editable DOCX with the same core facts", async () => {

@@ -30,6 +30,10 @@ Web, PDF, and DOCX share facts, section ordering, and visual language. Pixel-ide
 
 Initialize a public GitHub repository, but ignore source CV files, database files, contact data, exports, and secrets.
 
+### 2026-07-20 — Test-to-production branch promotion
+
+Use `test` as the persistent integration branch and Vercel Preview environment. Use `main` as the protected release branch and the only Vercel Production Branch. Feature branches merge into `test`; production releases are reviewed pull requests from `test` to `main` after preview verification.
+
 ## Proposed, awaiting implementation validation
 
 ### Persistence and hosting

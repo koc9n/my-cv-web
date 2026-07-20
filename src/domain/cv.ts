@@ -107,10 +107,10 @@ export type Cv = z.infer<typeof cvSchema>;
 
 const defaultSectionSettings: Cv["sectionSettings"] = [
   { id: "summary", label: "Summary", visible: true },
-  { id: "skills", label: "Technical skills", visible: true },
   { id: "experience", label: "Experience", visible: true },
+  { id: "skills", label: "Technical skills", visible: true },
   { id: "projects", label: "Selected projects", visible: true },
-  { id: "achievements", label: "Key achievements", visible: true },
+  { id: "achievements", label: "Key achievements", visible: false },
   { id: "education", label: "Education", visible: true },
   { id: "certifications", label: "Certifications", visible: true },
   { id: "languages", label: "Languages", visible: true },
