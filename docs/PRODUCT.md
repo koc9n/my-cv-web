@@ -65,4 +65,4 @@ The template supports all schema sections, but the default emphasis is:
 - Localization
 - Analytics and cookie consent
 - Multiple administrators and granular roles
-- Custom domain selection, pending the name from the source CV
+- Custom domain purchase and cutover; the selected production hostname is `koc9n.dev`

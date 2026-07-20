@@ -11,9 +11,9 @@
 
 Never send production secrets through chat or commit them. Enter them directly in Vercel project settings and a local ignored `.env.local` file.
 
-## Suggested domain
+## Selected domain
 
-At the 2026-07-20 RDAP check, `kostiantynmironchyk.com` and `kostiantynmironchyk.dev` returned no registration record. This is not a reservation or purchase guarantee. Prefer the `.com` for broad recruiter recognition; redirect the `.dev` variant if both are purchased.
+The selected production hostname is `koc9n.dev`. Availability and pricing were checked on 2026-07-21, but availability is not reserved until checkout completes. After purchase, attach it to the Vercel Production environment and follow the domain-cutover steps in `PROJECT-RUNBOOK.md`.
 
 ## Production sequence
 
