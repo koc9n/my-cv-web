@@ -10,7 +10,7 @@ export const defaultCv = validateCv({
     links: [{ label: "LinkedIn", url: "https://www.linkedin.com/in/koc9n" }],
   },
   summary:
-    "Senior software engineer with 15+ years of experience designing and operating Java-based enterprise systems and full-stack applications. Specialized in Spring Boot microservices, cloud infrastructure, and distributed systems, with hands-on experience across Angular, Node.js, AWS, Kubernetes, Kafka, and Terraform. Led cloud migration and platform modernization work at Allianz Technology while mentoring engineers and improving deployment and operational performance.",
+    "Senior software engineer with 14 years of experience designing and operating Java-based enterprise systems and full-stack applications. Specialized in Spring Boot microservices, cloud infrastructure, and distributed systems, with hands-on experience across Angular, Node.js, AWS, Kubernetes, Kafka, and Terraform. Led cloud migration and platform modernization work at Allianz Technology while mentoring engineers and improving deployment and operational performance.",
   skills: [
     { category: "Languages", items: ["Java", "JavaScript", "TypeScript", "Node.js", "HTML", "CSS"] },
     { category: "Backend", items: ["Spring Boot", "Hibernate", "Express.js", "JSF", "REST APIs", "Microservices"] },
