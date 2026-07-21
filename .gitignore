@@ -33,6 +33,7 @@ tmp/
 /.agents/
 /.codex/
 /.junie/
+/.vercel/
 
 # Logs
 *.log

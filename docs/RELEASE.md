@@ -21,7 +21,7 @@ The selected production hostname is `koc9n.dev`. Availability and pricing were c
 2. Import the repository into Vercel.
 3. Attach managed PostgreSQL and set `DATABASE_URL` for production only.
 4. Set all values from `.env.example`. Keep `ENABLE_PREVIEW_ADMIN=false`.
-5. Run `npm run db:deploy` against the production database.
+5. Confirm the production build applies pending Prisma migrations before compiling the application. `npm run db:deploy` remains available for an explicit manual run when production credentials are securely available.
 6. Deploy and record the final Vercel URL.
 7. Configure Google OAuth callback: `https://FINAL_HOST/api/auth/callback/google`.
 8. Verify the authorized account can edit, autosave, export a draft, publish, and restore.
