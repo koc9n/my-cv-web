@@ -28,6 +28,7 @@ Before application scaffolding locks the ORM schema, choose between:
 
 ## Other deployment concerns
 
+- The production build runs `prisma migrate deploy` before `next build` when `DATABASE_URL` is configured. Environments without a database skip this step; an invalid configured URL fails the build.
 - Google OAuth callback URLs must cover local, preview, and production environments.
 - Preview deployments must not expose production drafts or accept production contact traffic by default.
 - The selected production hostname is `koc9n.dev`; keep the current Vercel alias until the domain is purchased and attached.
