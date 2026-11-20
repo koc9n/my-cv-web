@@ -4,6 +4,20 @@ import { CvView } from "@/components/cv-view";
 import type { Cv } from "@/domain/cv";
 
 type Revision = { id: string; reason: string; createdAt: string };
+const editorSections = {
+  identity: "Identity",
+  layout: "Section order and visibility",
+  summary: "Summary",
+  skills: "Skills",
+  experience: "Experience",
+  projects: "Projects",
+  education: "Education",
+  certifications: "Certifications",
+  languages: "Languages",
+  achievements: "Key achievements",
+  additional: "Additional sections",
+};
+
 const move = <T,>(items: T[], from: number, to: number) => {
   const copy = [...items];
   const [item] = copy.splice(from, 1);
@@ -116,15 +130,12 @@ export function AdminEditor({
   return (
     <>
       <div className="editor-toolbar">
-        <div className="tabs">
-          <button
-            className={tab === "edit" ? "active" : ""}
-            onClick={() => setTab("edit")}
-          >
+        <div className="tabs" role="group" aria-label="Editor view">
+          <button aria-pressed={tab === "edit"} onClick={() => setTab("edit")}>
             Edit
           </button>
           <button
-            className={tab === "preview" ? "active" : ""}
+            aria-pressed={tab === "preview"}
             onClick={() => setTab("preview")}
           >
             Live preview
@@ -147,9 +158,21 @@ export function AdminEditor({
         <CvView cv={cv} preview />
       ) : (
         <div className="editor-layout">
+          <nav className="editor-nav" aria-label="CV editor sections">
+            <details open>
+              <summary>Jump to section</summary>
+              <ul>
+                {Object.entries(editorSections).map(([id, label]) => (
+                  <li key={id}>
+                    <a href={`#edit-${id}`}>{label}</a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </nav>
           <div className="editor">
-            <fieldset>
-              <legend>Identity</legend>
+            <fieldset id="edit-identity" tabIndex={-1}>
+              <legend>{editorSections.identity}</legend>
               {(["name", "headline", "location", "availability"] as const).map(
                 (k) => (
                   <label key={k}>
@@ -216,8 +239,8 @@ export function AdminEditor({
                 Add link
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Section order and visibility</legend>
+            <fieldset id="edit-layout" tabIndex={-1}>
+              <legend>{editorSections.layout}</legend>
               {cv.sectionSettings.map((s, i) => (
                 <div className="section-control" key={s.id}>
                   <input
@@ -260,9 +283,10 @@ export function AdminEditor({
                 </div>
               ))}
             </fieldset>
-            <fieldset>
-              <legend>Summary</legend>
+            <fieldset id="edit-summary" tabIndex={-1}>
+              <legend id="summary-label">{editorSections.summary}</legend>
               <textarea
+                aria-labelledby="summary-label"
                 rows={7}
                 value={cv.summary}
                 onChange={(e) =>
@@ -270,8 +294,8 @@ export function AdminEditor({
                 }
               />
             </fieldset>
-            <fieldset>
-              <legend>Skills</legend>
+            <fieldset id="edit-skills" tabIndex={-1}>
+              <legend>{editorSections.skills}</legend>
               {cv.skills.map((g, i) => (
                 <div className="editor-item" key={i}>
                   <div className="field-row">
@@ -331,8 +355,8 @@ export function AdminEditor({
                 Add skill group
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Experience</legend>
+            <fieldset id="edit-experience" tabIndex={-1}>
+              <legend>{editorSections.experience}</legend>
               {cv.experience.map((job, i) => (
                 <div className="editor-item" key={i}>
                   <div className="field-grid">
@@ -478,8 +502,8 @@ export function AdminEditor({
                 Add role
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Projects</legend>
+            <fieldset id="edit-projects" tabIndex={-1}>
+              <legend>{editorSections.projects}</legend>
               {cv.projects.map((p, i) => (
                 <div className="editor-item" key={i}>
                   <input
@@ -572,8 +596,8 @@ export function AdminEditor({
                 Add project
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Education</legend>
+            <fieldset id="edit-education" tabIndex={-1}>
+              <legend>{editorSections.education}</legend>
               {cv.education.map((e, i) => (
                 <div className="editor-item" key={i}>
                   <div className="field-grid">
@@ -631,8 +655,8 @@ export function AdminEditor({
                 Add education
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Certifications</legend>
+            <fieldset id="edit-certifications" tabIndex={-1}>
+              <legend>{editorSections.certifications}</legend>
               {cv.certifications.map((cert, i) => (
                 <div className="editor-item" key={i}>
                   <div className="field-grid">
@@ -688,8 +712,8 @@ export function AdminEditor({
                 Add certification
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Languages</legend>
+            <fieldset id="edit-languages" tabIndex={-1}>
+              <legend>{editorSections.languages}</legend>
               {cv.languages.map((l, i) => (
                 <div className="field-row" key={i}>
                   <input
@@ -751,8 +775,8 @@ export function AdminEditor({
                 Add language
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Key achievements</legend>
+            <fieldset id="edit-achievements" tabIndex={-1}>
+              <legend>{editorSections.achievements}</legend>
               {cv.achievements.map((a, i) => (
                 <div className="field-row" key={i}>
                   <textarea
@@ -799,8 +823,8 @@ export function AdminEditor({
                 Add achievement
               </button>
             </fieldset>
-            <fieldset>
-              <legend>Additional sections</legend>
+            <fieldset id="edit-additional" tabIndex={-1}>
+              <legend>{editorSections.additional}</legend>
               {cv.additionalSections.map((s, i) => (
                 <div className="editor-item" key={s.id}>
                   <input
@@ -880,7 +904,7 @@ export function AdminEditor({
             <h2>Revisions</h2>
             {revisions.length ? (
               revisions.map((r) => (
-                <div key={r.id}>
+                <div className="revision-item" key={r.id}>
                   <strong>{r.reason}</strong>
                   <small>{new Date(r.createdAt).toLocaleString()}</small>
                   <button className="text-link" onClick={() => restore(r.id)}>
