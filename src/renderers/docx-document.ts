@@ -8,7 +8,12 @@ import {
   Paragraph,
   TextRun,
 } from "docx";
-import { visibleSections, type Cv, type SectionId } from "@/domain/cv";
+import {
+  visibleAdditionalSections,
+  visibleSections,
+  type Cv,
+  type SectionId,
+} from "@/domain/cv";
 
 const heading = (text: string) =>
   new Paragraph({ text: text.toUpperCase(), heading: HeadingLevel.HEADING_1 });
@@ -155,9 +160,9 @@ function sectionParagraphs(cv: Cv, id: SectionId, label: string): Paragraph[] {
     ];
   if (id === "achievements")
     return [...out, ...cv.achievements.map((a) => bullet(a.text))];
-  return cv.additionalSections.flatMap((s) => [
+  return visibleAdditionalSections(cv).flatMap((s) => [
     heading(s.title),
-    ...s.items.map(bullet),
+    ...s.items.filter((item) => item.trim()).map(bullet),
   ]);
 }
 
