@@ -11,10 +11,7 @@ export default async function Admin() {
   return (
     <main className="admin-shell">
       <header className="admin-header">
-        <div>
-          <p className="eyebrow">Private workspace</p>
-          <h1 className="admin-title">Edit CV</h1>
-        </div>
+        <h1 className="admin-title">Edit CV</h1>
         <a className="button" href="/" target="_blank" rel="noreferrer">
           View website
         </a>

@@ -137,12 +137,16 @@ export function validateCv(value: unknown): Cv {
   return cvSchema.parse(value);
 }
 
+export function visibleAdditionalSections(cv: Cv) {
+  return cv.additionalSections.filter(
+    (section) =>
+      section.title.trim() && section.items.some((item) => item.trim()),
+  );
+}
+
 export function sectionHasContent(cv: Cv, id: SectionId): boolean {
   if (id === "summary") return Boolean(cv.summary.trim());
-  if (id === "additional")
-    return cv.additionalSections.some(
-      (s) => s.title.trim() && s.items.some(Boolean),
-    );
+  if (id === "additional") return visibleAdditionalSections(cv).length > 0;
   return cv[id].length > 0;
 }
 

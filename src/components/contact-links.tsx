@@ -1,45 +1,86 @@
 "use client";
+
 import { useState } from "react";
+
 type Kind = "email" | "telegram";
-export function ContactLinks() {
-  const [revealed, setRevealed] = useState<
-    Partial<Record<Kind, { href: string; label: string }>>
-  >({});
+type DirectLink = { href: string; label: string };
+const focusRevealedLink = (node: HTMLAnchorElement | null) => node?.focus();
+
+export function ContactLinks({
+  emailAvailable,
+  telegramAvailable,
+}: {
+  emailAvailable: boolean;
+  telegramAvailable: boolean;
+}) {
+  const [revealed, setRevealed] = useState<Partial<Record<Kind, DirectLink>>>(
+    {},
+  );
+  const [pending, setPending] = useState<Kind | null>(null);
   const [error, setError] = useState("");
+
   async function reveal(type: Kind) {
+    if (pending) return;
     setError("");
-    const response = await fetch("/api/contact/reveal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type }),
-    });
-    const body = await response.json();
-    if (response.ok) setRevealed((v) => ({ ...v, [type]: body }));
-    else setError(body.error ?? "Contact option unavailable");
+    setPending(type);
+    try {
+      const response = await fetch("/api/contact/reveal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type }),
+      });
+      if (!response.ok) {
+        setError(
+          response.status === 429
+            ? "Too many requests. Please try again later."
+            : "This contact option is currently unavailable.",
+        );
+        return;
+      }
+      const link: DirectLink = await response.json();
+      setRevealed((current) => ({ ...current, [type]: link }));
+    } catch {
+      setError("Connection interrupted. Please try again.");
+    } finally {
+      setPending(null);
+    }
   }
+
+  const options: Kind[] = [];
+  if (emailAvailable) options.push("email");
+  if (telegramAvailable) options.push("telegram");
+  if (!options.length) return null;
+
   return (
-    <div className="contact-links" aria-label="Direct contact options">
-      {(["email", "telegram"] as const).map((type) =>
-        revealed[type] ? (
+    <div className="contact-links">
+      {options.map((type) => {
+        const link = revealed[type];
+        return link ? (
           <a
             className="button"
             key={type}
-            href={revealed[type]!.href}
+            href={link.href}
             rel="noreferrer"
+            ref={focusRevealedLink}
           >
-            {revealed[type]!.label}
+            {link.label}
           </a>
         ) : (
           <button
             className="button"
             type="button"
             key={type}
+            disabled={pending !== null}
             onClick={() => reveal(type)}
           >
-            Show {type}
+            {pending === type
+              ? "Revealing…"
+              : type === "email"
+                ? "Show email"
+                : "Show Telegram"}
           </button>
-        ),
-      )}
+        );
+      })}
       <p role="status">{error}</p>
     </div>
   );

@@ -1,7 +1,16 @@
-import { visibleSections, type Cv, type SectionId } from "@/domain/cv";
+import {
+  visibleAdditionalSections,
+  visibleSections,
+  type Cv,
+  type SectionId,
+} from "@/domain/cv";
 
 function Section({ id, label, cv }: { id: SectionId; label: string; cv: Cv }) {
-  const heading = <h2 id={id}>{label}</h2>;
+  const heading = (
+    <h2 id={id} tabIndex={-1}>
+      {label}
+    </h2>
+  );
   if (id === "summary")
     return (
       <section aria-labelledby={id}>
@@ -30,22 +39,19 @@ function Section({ id, label, cv }: { id: SectionId; label: string; cv: Cv }) {
         <div className="timeline">
           {cv.experience.map((job) => (
             <article className="job" key={`${job.employer}-${job.start}`}>
-              <div className="job-heading">
-                <div>
-                  <h3>{job.role}</h3>
-                  <p className="employer">{job.employer}</p>
-                </div>
-                <p className="dates">
-                  {job.start} - {job.end}
-                  <br />
-                  {job.location}
-                </p>
-              </div>
-              <ul>
-                {job.achievements.map((item) => (
-                  <li key={item.text}>{item.text}</li>
-                ))}
-              </ul>
+              <h3>{job.role}</h3>
+              <p className="job-meta">
+                <span className="employer">{job.employer}</span>
+                <span>{[job.start, job.end].filter(Boolean).join(" – ")}</span>
+                {job.location && <span>{job.location}</span>}
+              </p>
+              {job.achievements.length > 0 && (
+                <ul>
+                  {job.achievements.map((item) => (
+                    <li key={item.text}>{item.text}</li>
+                  ))}
+                </ul>
+              )}
               {job.technologies.length > 0 && (
                 <p className="stack">
                   <strong>Stack:</strong> {job.technologies.join(", ")}
@@ -148,13 +154,17 @@ function Section({ id, label, cv }: { id: SectionId; label: string; cv: Cv }) {
     );
   return (
     <>
-      {cv.additionalSections.map((s) => (
+      {visibleAdditionalSections(cv).map((s) => (
         <section aria-labelledby={`additional-${s.id}`} key={s.id}>
-          <h2 id={`additional-${s.id}`}>{s.title}</h2>
+          <h2 id={`additional-${s.id}`} tabIndex={-1}>
+            {s.title}
+          </h2>
           <ul>
-            {s.items.filter(Boolean).map((item) => (
-              <li key={item}>{item}</li>
-            ))}
+            {s.items
+              .filter((item) => item.trim())
+              .map((item) => (
+                <li key={item}>{item}</li>
+              ))}
           </ul>
         </section>
       ))}
@@ -163,56 +173,88 @@ function Section({ id, label, cv }: { id: SectionId; label: string; cv: Cv }) {
 }
 
 export function CvView({ cv, preview = false }: { cv: Cv; preview?: boolean }) {
+  const sections = visibleSections(cv);
+  const sectionLinks = sections.flatMap((section) =>
+    section.id === "additional"
+      ? visibleAdditionalSections(cv).map((item) => ({
+          id: `additional-${item.id}`,
+          label: item.title,
+        }))
+      : [section],
+  );
+  const [firstName, ...restOfName] = cv.basics.name.trim().split(/\s+/);
+  const remainingName = restOfName.join(" ");
+  const profileLinks = cv.basics.links.filter((link) => link.url);
+
   return (
-    <article
-      className={`cv${preview ? " cv-preview" : ""}`}
-      id={preview ? undefined : "cv"}
-    >
+    <article className={preview ? "cv cv-preview" : "cv"}>
       <header className="hero">
+        {!preview && <div className="hero-art" aria-hidden="true" />}
         <div className="hero-identity">
-          <p className="eyebrow">Senior software engineering</p>
-          <h1>{cv.basics.name}</h1>
+          <h1>
+            {firstName}
+            {remainingName && (
+              <>
+                {" "}
+                <span>{remainingName}</span>
+              </>
+            )}
+          </h1>
           <p className="headline">{cv.basics.headline}</p>
-          <p className="meta">
-            {cv.basics.location} <span aria-hidden="true">/</span>{" "}
-            {cv.basics.availability}
+          <p className="hero-meta">
+            {cv.basics.location && <span>{cv.basics.location}</span>}
+            {cv.basics.availability && (
+              <span className="availability">{cv.basics.availability}</span>
+            )}
           </p>
-        </div>
-        {!preview && (
-          <nav className="actions" aria-label="CV actions">
-            <a className="button primary" href="#contact">
-              Contact
-            </a>
-            <a className="button" href="/api/export/pdf">
-              Download PDF
-            </a>
-            <a className="button" href="/api/export/docx">
-              Download DOCX
-            </a>
-            {cv.basics.links
-              .filter((link) => link.url)
-              .map((link) => (
-                <a
-                  className="button link-button"
-                  key={link.url}
-                  href={link.url}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {link.label}
-                </a>
+          {!preview && profileLinks.length > 0 && (
+            <ul className="print-profiles">
+              {profileLinks.map((link) => (
+                <li key={link.url}>
+                  <a href={link.url}>
+                    {link.label}: {link.url}
+                  </a>
+                </li>
               ))}
+            </ul>
+          )}
+          {!preview && (
+            <nav className="actions" aria-label="CV downloads">
+              <a className="button primary" href="/api/export/pdf">
+                <span className="download-icon" aria-hidden="true">
+                  ↓
+                </span>
+                Download PDF
+              </a>
+              <a className="button" href="/api/export/docx">
+                Download DOCX
+              </a>
+            </nav>
+          )}
+        </div>
+      </header>
+      <div className="cv-body">
+        {!preview && sectionLinks.length > 0 && (
+          <nav className="section-nav" aria-label="On this page">
+            <p aria-hidden="true">On this page</p>
+            <ul>
+              {sectionLinks.map(({ id, label }) => (
+                <li key={id}>
+                  <a href={`#${id}`}>{label}</a>
+                </li>
+              ))}
+              <li>
+                <a href="#contact">Contact</a>
+              </li>
+            </ul>
           </nav>
         )}
-      </header>
-      {visibleSections(cv).map((section) => (
-        <Section
-          key={section.id}
-          id={section.id}
-          label={section.label}
-          cv={cv}
-        />
-      ))}
+        <div className="cv-sections">
+          {sections.map(({ id, label }) => (
+            <Section key={id} id={id} label={label} cv={cv} />
+          ))}
+        </div>
+      </div>
     </article>
   );
 }

@@ -4,7 +4,6 @@ export default function SignIn() {
   return (
     <main className="admin-shell">
       <section className="admin-card">
-        <p className="eyebrow">Private workspace</p>
         <h1 className="admin-title">CV administration</h1>
         <p>Sign in with the authorized Google account.</p>
         <button
